@@ -1,0 +1,25 @@
+{
+    "name": "myoperator/transport",
+    "description": "Guzzle wrapper for making GET or POST or any network requests",
+    "type": "library",
+    "license": "GPL",
+    "authors": [
+        {
+            "name": "Ashutosh Chaudhary",
+            "email": "216.ashutosh@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+        "guzzlehttp/guzzle": "~6.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^5"
+    },
+    "autoload": {
+        "psr-4": {
+            "MyOperator\\": "src/"
+        }
+    }
+}
+
