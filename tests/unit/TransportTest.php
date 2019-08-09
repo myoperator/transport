@@ -69,10 +69,16 @@ final class TransportTest extends TestCase
         $this->assertEquals(60, $config['connect_timeout']);
     }
 
+    public function test_get_response_json_is_array() {
+        $transport = new Transport($this->baseurl);
+        $response = $transport->get('/get', ['a' => 'b']);
+        $this->assertEquals(200, $response->getStatus());
+        $this->assertTrue(is_array($response->json()));
+    }
+
     public function test_post_response_is_returning()
     {
         $transport = new Transport($this->baseurl);
-        //Test Query string param style
         $response = $transport->post('/post', ['a' => 'b']);
         $this->assertEquals(200, $response->getStatus());
         $this->assertEquals(['a' => 'b'], $response->json()['json']);
