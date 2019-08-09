@@ -6,18 +6,21 @@ use \MyOperator\Transport;
 final class TransportTest extends TestCase
 {
     public function setUp() {
-        $this->baseurl = 'https://httpbin.org';
+        $this->baseurl = 'http://localhost';
     }
 
     public function test_headers_are_set()
     {
         $transport = new Transport();
         $transport->setBaseUrl($this->baseurl);
-        $transport->setHeaders(['X-Custom-Header' => 'abc']);
+        $transport->setHeaders(['X-Custom-Header' => 'abc', 'Content-Type' => 'application/x-www-form-urlencoded']);
         $headers = $transport->getHeaders();
         $this->assertArrayHasKey('X-Custom-Header', $headers);
+        $this->assertArrayHasKey('Content-Type', $headers);
         $header = $transport->getHeader('X-Custom-Header');
+        $content_header = $transport->getHeader('Content-Type');
         $this->assertEquals('abc', $header);
+        $this->assertEquals('application/x-www-form-urlencoded', $content_header);
     }
 
     public function test_get_response_is_returning_json()
@@ -72,8 +75,20 @@ final class TransportTest extends TestCase
         //Test Query string param style
         $response = $transport->post('/post', ['a' => 'b']);
         $this->assertEquals(200, $response->getStatus());
-        $this->assertEquals(['a' => 'b'], $response['form']);
+        $this->assertEquals(['a' => 'b'], $response->json()['json']);
+    }
 
+    public function test_default_headers_is_json() {
+        $transport = new Transport();
+        $this->assertEquals('application/json', $transport->getHeader('Content-Type'));
+    }
+
+    public function test_post_formdata_response_returning() {
+        $transport = new Transport($this->baseurl);
+        $transport->setHeaders(['Content-Type' => 'application/x-www-form-urlencoded']);
+        $response = $transport->post('/post', ['a' => 'b']);
+        $this->assertEquals(200, $response->getStatus());
+        $this->assertEquals(['a' => 'b'], $response->json()['form']);
     }
 
     public function test_guzzle_is_actual_transport()

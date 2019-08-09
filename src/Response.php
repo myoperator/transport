@@ -27,14 +27,6 @@ class Response {
         return $this->textResponse;
     }
 
-    public function getHeaders() {
-        return $this->response->getHeaders();
-    }
-
-    public function getHeader($header) {
-        return $this->getHeader($header);
-    }
-
     public function json($arrayable = true) {
         $jsonResponse = json_decode($this->textResponse, $arrayable);
         if($jsonResponse == null && json_last_error_msg() !== null) {

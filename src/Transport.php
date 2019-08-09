@@ -37,6 +37,11 @@ class Transport {
     public function setHeaders(Array $headers) {
         foreach($headers as $k => $header) {
             $this->headers[$k] = $header;
+            foreach($this->defaultOpts['headers'] as $key => $defaultHeaders) {
+                if($key == $k) {
+                    $this->defaultOpts['headers'][$key] = $header;
+                }
+            }
         }
 
         $this->updateClient();
@@ -78,6 +83,7 @@ class Transport {
         $content_type = array_filter($headers, function ($v, $k){
             return strtolower($k) == 'content-type';
         }, ARRAY_FILTER_USE_BOTH);
+        $content_type = isset($content_type['Content-Type']) ? $content_type['Content-Type'] : null;
         $param = 'json';
         switch($content_type) {
             case 'application/x-www-form-urlencoded': $param = 'form_params'; break;
@@ -88,12 +94,11 @@ class Transport {
     }
 
     public function get($path, $query_params=[]) {
-//        $response = ['headers' => array_map(function ($val) { return $val; }, $this->getHeaders())];
         $response = !empty($query_params) ? $this->client->request('GET', $path, ['query' => $query_params]) : $this->client->get($path);
         return new Response($response);
     }
 
-    public function post($path, $data, $headers = []) {
+    public function post($path, $data) {
         $param = $this->getFormParam();
         $response = $this->client->request('POST', $path, [$param => $data]);
         return new Response($response);
