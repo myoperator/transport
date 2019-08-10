@@ -51,6 +51,20 @@ final class TransportMockTest extends TestCase
         $this->fail('Server errors did not throw any exception');
     }
 
+    public function test_setting_header_still_mocks() {
+        $transport = new TransportMock();
+        $mockResponse = $transport->createResponse(json_encode(['a' => 'b']), []);
+        $transport->queue($mockResponse);
+        $transport->mock();
+
+
+        $transport->setHeaders(['X' => 'y']);
+        $response = $transport->get('/get', ['a' => 'b']);
+
+        $this->assertEquals(200, $response->getStatus());
+        $this->assertEquals(['a' => 'b'], $response->json());
+    }
+
     public function tests_clear_queue_throw_exception() {
         $transport = new TransportMock();
         $mockResponse = $transport->createResponse(json_encode(['a' => 'b']), []);

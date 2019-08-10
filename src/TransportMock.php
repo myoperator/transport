@@ -21,6 +21,10 @@ class TransportMock extends Transport {
         $this->client = new Client(['handler' => $handler]);
     }
 
+    public function setHeaders() {
+        return $this;
+    }
+
     public function queue(GuzzleResponse $response) {
         $this->queues[] = $response;
     }
