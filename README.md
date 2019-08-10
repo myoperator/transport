@@ -56,7 +56,7 @@ $response = $transport->get('/getjson');
 // assertTrue $response->json() == ['a' => 'b']
 // assertTrue $response->text() == '{"a": "b"}'
 
-$response = $transport->get('/gettext);
+$response = $transport->get('/gettext');
 // assertTrue $response->json() == 'Simple text response'
 // assertTrue $response->text() == 'Simple text response'
 // assertTrue (string) $response == 'Simple text response'
