@@ -9,14 +9,14 @@ class Transport {
         'connect_timeout' => 30,
         'headers' => [
             'Content-Type' => 'application/json'
-        ]
+        ],
+        'allow_redirects' => true
     ];
 
     public function __construct($baseuri = null, $headers=[]) {
         $this->baseurl = $baseuri;
         $this->headers = $headers;
-        $client = $this->getClient();
-        $this->client = $client;
+        $this->client = $this->getClient();
     }
 
     public function setBaseUrl($url) {
@@ -73,7 +73,8 @@ class Transport {
             'base_uri' => $this->baseurl,
             'headers' => $this->getHeaders(),
             'connect_timeout' => $opts['connect_timeout'],
-            'debug' => $opts['debug']
+            'debug' => $opts['debug'],
+            'allow_redirects' => $opts['allow_redirects']
         ]);
     }
 
