@@ -21,7 +21,7 @@ class TransportMock extends Transport {
         $this->client = new Client(['handler' => $handler]);
     }
 
-    public function setHeaders() {
+    public function setHeaders(array $headers=[]) {
         return $this;
     }
 
