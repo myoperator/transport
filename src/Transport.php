@@ -110,7 +110,7 @@ class Transport {
         return new Response($response);
     }
 
-    public function post($path, $data) {
+    public function post($path, $data=[]) {
         $param = $this->getFormParam();
         $response = $this->client->request('POST', $path, [$param => $data]);
         return new Response($response);

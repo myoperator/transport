@@ -97,6 +97,14 @@ final class TransportTest extends TestCase
         $this->assertEquals(['a' => 'b'], $response->json()['form']);
     }
 
+    public function test_post_without_data() {
+        $transport = new Transport($this->baseurl);
+        $transport->setHeaders(['Content-Type' => 'application/x-www-form-urlencoded']);
+        $response = $transport->post('/post');
+        $this->assertEquals(200, $response->getStatus());
+        $this->assertEquals([], $response->json()['form']);
+    }
+
     public function test_guzzle_is_actual_transport()
     {
         $transport = new Transport();
