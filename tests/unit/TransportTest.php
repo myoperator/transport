@@ -6,7 +6,7 @@ use \MyOperator\Transport;
 final class TransportTest extends TestCase
 {
     public function setUp() {
-        $this->baseurl = 'http://localhost';
+        $this->baseurl = 'http://httpbin.org';
     }
 
     public function test_headers_are_set()

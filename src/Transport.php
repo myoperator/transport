@@ -81,10 +81,21 @@ class Transport {
     private function getFormParam()
     {
         $headers = $this->client->getConfig('headers');
-        $content_type = array_filter($headers, function ($v, $k){
-            return strtolower($k) == 'content-type';
-        }, ARRAY_FILTER_USE_BOTH);
-        $content_type = isset($content_type['Content-Type']) ? $content_type['Content-Type'] : null;
+	if(version_compare(phpversion(), '5.6.0', '<')){
+	    $content_type = array_map(function($k, $v){
+		return [strtolower($k) => $v];
+	    }, array_keys($headers), $headers);
+            $content_type = array_intersect_key($content_type, array('content-type'));
+        } else {
+	    $content_type = array_filter($headers, function ($v, $k){
+                return strtolower($k) == 'content-type';
+            }, ARRAY_FILTER_USE_BOTH);
+            $content_type = array_map(function($k, $v){
+		return [strtolower($k) => $v];
+	    }, array_keys($content_type), $content_type);
+        }
+	$content_type = (isset($content_type[0]) && is_array($content_type[0])) ? $content_type[0] : $content_type; 
+        $content_type = isset($content_type['content-type']) ? $content_type['content-type'] : null;
         $param = 'json';
         switch($content_type) {
             case 'application/x-www-form-urlencoded': $param = 'form_params'; break;
