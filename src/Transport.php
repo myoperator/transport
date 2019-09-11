@@ -106,13 +106,13 @@ class Transport {
     }
 
     public function get($path, $query_params=[]) {
-        $response = !empty($query_params) ? $this->client->request('GET', $path, ['query' => $query_params]) : $this->client->get($path);
+        $response = !empty($query_params) ? $this->getClient()->request('GET', $path, ['query' => $query_params]) : $this->client->get($path);
         return new Response($response);
     }
 
     public function post($path, $data=[]) {
         $param = $this->getFormParam();
-        $response = $this->client->request('POST', $path, [$param => $data]);
+        $response = $this->getClient()->request('POST', $path, [$param => $data]);
         return new Response($response);
     }
 }
