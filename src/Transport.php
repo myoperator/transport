@@ -2,6 +2,8 @@
 
 namespace MyOperator;
 
+use \GuzzleHttp\RequestOptions;
+
 class Transport {
 
     private $defaultOpts = [
@@ -17,6 +19,7 @@ class Transport {
         $this->baseurl = $baseuri;
         $this->headers = $headers;
         $this->client = $this->getClient();
+        $this->requestOptions = (new \ReflectionClass(RequestOptions::class))->getConstants();
     }
 
     public function setBaseUrl($url) {
@@ -34,7 +37,10 @@ class Transport {
         return $this;
     }
 
-    public function setHeaders(Array $headers) {
+    public function setHeaders($headers, $value = null) {
+        if(($value !== null) && !is_array($headers)) {
+            $headers = [$headers => $value];
+        }
         foreach($headers as $k => $header) {
             $this->headers[$k] = $header;
             foreach($this->defaultOpts['headers'] as $key => $defaultHeaders) {
@@ -81,20 +87,20 @@ class Transport {
     private function getFormParam()
     {
         $headers = $this->client->getConfig('headers');
-	if(version_compare(phpversion(), '5.6.0', '<')){
-	    $content_type = array_map(function($k, $v){
-		return [strtolower($k) => $v];
-	    }, array_keys($headers), $headers);
+	    if(version_compare(phpversion(), '5.6.0', '<')){
+            $content_type = array_map(function($k, $v){
+                return [strtolower($k) => $v];
+            }, array_keys($headers), $headers);
             $content_type = array_intersect_key($content_type, array('content-type'));
         } else {
-	    $content_type = array_filter($headers, function ($v, $k){
+            $content_type = array_filter($headers, function ($v, $k){
                 return strtolower($k) == 'content-type';
             }, ARRAY_FILTER_USE_BOTH);
             $content_type = array_map(function($k, $v){
-		return [strtolower($k) => $v];
-	    }, array_keys($content_type), $content_type);
+		        return [strtolower($k) => $v];
+	        }, array_keys($content_type), $content_type);
         }
-	$content_type = (isset($content_type[0]) && is_array($content_type[0])) ? $content_type[0] : $content_type; 
+	    $content_type = (isset($content_type[0]) && is_array($content_type[0])) ? $content_type[0] : $content_type; 
         $content_type = isset($content_type['content-type']) ? $content_type['content-type'] : null;
         $param = 'json';
         switch($content_type) {
@@ -105,14 +111,25 @@ class Transport {
         return $param;
     }
 
-    public function get($path, $query_params=[]) {
-        $response = !empty($query_params) ? $this->getClient()->request('GET', $path, ['query' => $query_params]) : $this->client->get($path);
+    function __call($method, $args) {
+        $response = \call_user_func_array([$this->getClient(), $method], $args);
         return new Response($response);
     }
 
-    public function post($path, $data=[]) {
-        $param = $this->getFormParam();
-        $response = $this->getClient()->request('POST', $path, [$param => $data]);
-        return new Response($response);
+    function get($path, $data=[], $options=[]) {
+        if(!(array_intersect(array_keys($data), array_values($this->requestOptions)))) {
+            $data = ['query' => $data];
+        }
+        $options = array_merge($data, $options);
+        return self::__call(__FUNCTION__, [$path, $options]);
+    }
+
+    function post($path, $data=[], $options=[]) {
+       if(!(array_intersect(array_keys($data), array_values($this->requestOptions)))) {
+           $param = $this->getFormParam();
+           $data = [$param => $data];
+       }
+       $options = array_merge($data, $options);
+       return self::__call(__FUNCTION__, [$path, $options]);
     }
 }

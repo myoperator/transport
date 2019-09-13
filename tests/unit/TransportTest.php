@@ -6,7 +6,7 @@ use \MyOperator\Transport;
 final class TransportTest extends TestCase
 {
     public function setUp() {
-        $this->baseurl = 'http://httpbin.org';
+        $this->baseurl = 'http://0.0.0.0';
     }
 
     public function test_headers_are_set()
@@ -28,7 +28,7 @@ final class TransportTest extends TestCase
         $transport = new Transport();
         $transport->setBaseUrl($this->baseurl);
         //Test Query string param style
-        $response = $transport->get('/get', ['a' => 'b']);
+        $response = $transport->get('/get', ['query' => ['a' => 'b']]);
         $responseArray = json_decode($response, true);
         $this->assertEquals(200, $response->getStatus());
         $this->assertEquals(['a' => 'b'], $responseArray['args']);
@@ -46,7 +46,7 @@ final class TransportTest extends TestCase
 
     public function test_baseuri_passed_constructor() {
         $transport = new Transport($this->baseurl);
-        $response = $transport->get('/get', ['a' => 'b']);
+        $response = $transport->get('/get', ['query' => ['a' => 'b']]);
         $this->assertEquals(['a' => 'b'], $response->json()['args']);
     }
 
@@ -79,7 +79,7 @@ final class TransportTest extends TestCase
     public function test_post_response_is_returning()
     {
         $transport = new Transport($this->baseurl);
-        $response = $transport->post('/post', ['a' => 'b']);
+        $response = $transport->post('/post', ['json' => ['a' => 'b']]);
         $this->assertEquals(200, $response->getStatus());
         $this->assertEquals(['a' => 'b'], $response->json()['json']);
     }
@@ -92,7 +92,13 @@ final class TransportTest extends TestCase
     public function test_post_formdata_response_returning() {
         $transport = new Transport($this->baseurl);
         $transport->setHeaders(['Content-Type' => 'application/x-www-form-urlencoded']);
-        $response = $transport->post('/post', ['a' => 'b']);
+        $response = $transport->post('/post', ['form_params' => ['a' => 'b']]);
+        $this->assertEquals(200, $response->getStatus());
+        $this->assertEquals(['a' => 'b'], $response->json()['form']);
+
+        // Test with our data
+        // Can be body, form_params, or multiparts
+        $response = $transport->post('/post', ['form_params' => ['a' => 'b']]);
         $this->assertEquals(200, $response->getStatus());
         $this->assertEquals(['a' => 'b'], $response->json()['form']);
     }
@@ -110,5 +116,45 @@ final class TransportTest extends TestCase
         $transport = new Transport();
         $client = $transport->getClient();
         $this->assertTrue(($client instanceof \GuzzleHTTP\Client));
+    }
+
+    public function test_transport_can_use_guzzle_format()
+    {
+        $transport = new Transport($this->baseurl);
+        //$transport->setHeaders(['Content-Type' => 'application/x-www-form-urlencoded']);
+        $response = $transport->post('/post', ['json' => ['a' => 'b']]);
+        $this->assertEquals(['a' => 'b'], $response->json()['json']);
+    }
+
+    public function test_get_base_url() {
+        $transport = new Transport($this->baseurl);
+        $this->assertEquals($this->baseurl, $transport->getBaseUrl());
+    }
+
+    public function test_transport_uses_params()
+    {
+        $transport = new Transport($this->baseurl);
+        //$transport->setHeaders(['Content-Type' => 'application/x-www-form-urlencoded']);
+        $response = $transport->post('/post', ['json' => ['a' => 'b']]);
+        $this->assertEquals(['a' => 'b'], $response->json()['json']);
+        $this->assertEquals(['application/json'], $response->getHeader('Content-Type'));
+
+        $transport->setHeaders(['Content-Type' => 'application/x-www-form-urlencoded']);
+        $response = $transport->post('/post', ['a' => 'b']);
+        $this->assertEquals(['a' => 'b'], $response->json()['form']);
+        $this->assertEquals(
+            'application/x-www-form-urlencoded',
+            $response->json()['headers']['Content-Type']
+        );
+
+        $transport->setHeaders(['Content-Type' => 'multipart/form-data']);
+        $response = $transport->post('/post', [
+            ['name' => 'a', 'contents' => 'b']
+        ]);
+        $this->assertEquals(['a' => 'b'], $response->json()['form']);
+        $this->assertContains(
+            'multipart/form-data',
+            $response->json()['headers']['Content-Type']
+        );
     }
 }

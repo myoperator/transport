@@ -36,6 +36,13 @@ final class ResponseTest extends TestCase
         $this->assertEquals(['a' => ['b' => 'c']], $response->json());
     }
 
+    public function test_response_returns_headers() {
+        $httpresponse = new HTTPResponse(200, ['X-api-key' => 'a'], json_encode(['a'=> ['b' => 'c']]));
+        $response = new Response($httpresponse);
+        $this->assertEquals($httpresponse->getHeaders(), $response->getHeaders());
+        $this->assertEquals(['a'], $response->getHeader('X-api-key'));
+    }
+
     public function test_response_return_string_invalidjson() {
         $httpresponse = new HTTPResponse(200, [], 'invalid json');
         $response = new Response($httpresponse);

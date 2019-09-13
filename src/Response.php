@@ -11,6 +11,10 @@ class Response {
         $this->textResponse = $this->response->getBody()->getContents();
     }
 
+    function __call($method, $args) {
+        return \call_user_func_array([$this->response, $method], $args);
+    }
+
     public function getOriginalResponse() {
         return $this->response;
     }
