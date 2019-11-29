@@ -56,11 +56,17 @@ class Transport {
 
     public function setTimeout($timeout = 30) {
         $this->defaultOpts['connect_timeout'] = $timeout;
+        $this->updateClient();
         return $this;
     }
 
     private function updateClient($opts = []) {
-        $this->client = $this->getClient($opts);
+        $this->client = $this->createClient($opts);
+        return $this;
+    }
+
+    public function setClient(\GuzzleHttp\Client $client) {
+        $this->client = $client;
         return $this;
     }
 
@@ -73,8 +79,8 @@ class Transport {
         return array_key_exists($header, $headers) ? $headers[$header]: [];
     }
 
-    public function getClient($opts = []) {
-        $opts = array_merge($opts, $this->defaultOpts);
+    public function createClient($opts = []) {
+        $opts = array_merge($this->defaultOpts, $opts);
         return new \GuzzleHttp\Client([
             'base_uri' => $this->baseurl,
             'headers' => $this->getHeaders(),
@@ -82,6 +88,13 @@ class Transport {
             'debug' => $opts['debug'],
             'allow_redirects' => $opts['allow_redirects']
         ]);
+    }
+
+    public function getClient() {
+        if(!isset($this->client))  {
+            $this->client = $this->createClient();
+        }
+        return $this->client;
     }
 
     private function getFormParam()

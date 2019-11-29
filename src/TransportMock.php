@@ -21,7 +21,7 @@ class TransportMock extends Transport {
         $this->client = new Client(['handler' => $handler]);
     }
 
-    public function setHeaders(array $headers=[]) {
+    public function setHeaders($headers=[], $value = NULL) {
         return $this;
     }
 
@@ -34,7 +34,7 @@ class TransportMock extends Transport {
         $this->mock();
     }
 
-    public function get($path, $query_params = []) {
+    public function get($path, $query_params = [], $options = []) {
         $response = !empty($query_params) ? $this->client->request('GET', $path, ['query' => $query_params]) : $this->client->get($path);
         return new Response($response);
     }
