@@ -1,5 +1,7 @@
 <?php
 
+namespace MyOperator\TransportTests\Unit;
+
 use PHPUnit\Framework\TestCase;
 use \MyOperator\Response;
 use GuzzleHttp\Psr7\Response as HTTPResponse;
