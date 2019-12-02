@@ -1,5 +1,7 @@
 <?php
 
+namespace MyOperator\TransportTests\Integration;
+
 use PHPUnit\Framework\TestCase;
 use \MyOperator\Transport;
 
