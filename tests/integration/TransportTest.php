@@ -3,7 +3,7 @@
 namespace MyOperator\TransportTests\Integration;
 
 use PHPUnit\Framework\TestCase;
-use \MyOperator\Transport;
+use MyOperator\Transport\Transport;
 
 final class TransportTest extends TestCase
 {

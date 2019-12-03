@@ -1,8 +1,8 @@
 <?php
 
-namespace MyOperator;
+namespace MyOperator\Transport;
 
-use \GuzzleHttp\RequestOptions;
+use GuzzleHttp\RequestOptions;
 
 class Transport {
 
