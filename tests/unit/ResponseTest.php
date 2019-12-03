@@ -3,7 +3,7 @@
 namespace MyOperator\TransportTests\Unit;
 
 use PHPUnit\Framework\TestCase;
-use \MyOperator\Response;
+use MyOperator\Transport\Response;
 use GuzzleHttp\Psr7\Response as HTTPResponse;
 
 final class ResponseTest extends TestCase

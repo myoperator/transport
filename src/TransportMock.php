@@ -1,6 +1,6 @@
 <?php
 
-namespace MyOperator;
+namespace MyOperator\Transport;
 
 use GuzzleHttp\Client;
 use GuzzleHttp\HandlerStack;

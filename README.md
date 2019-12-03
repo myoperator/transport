@@ -15,7 +15,7 @@ To make a `GET` or `POST` requests:
 
 include_once 'vendor/autoload.php';
 
-use MyOperator\Transport;
+use MyOperator\Transport\Transport;
 
 $transport = new Transport('http://localhost/api');
 
@@ -45,7 +45,7 @@ echo $response->text(); //{"a": "b"}
 Responses are the main part of making any responses. Since responses can be of any type (i.e. json, xml, text etc)
 this library takes cares of automatically converting any json encodeable responses.
 
-Responses are part of `\MyOperator\Transport\Response`. Hence any response have three available methods:
+Responses are part of `MyOperator\Transport\Response`. Hence any response have three available methods:
 
 - `json()` which returns array if response is valid json. Else the response is returned as is
 - `text()` returns the text response as is
@@ -71,7 +71,7 @@ $response = $transport->get('/gettext');
 Sometime, you may wish to add headers, which can be easily done using `setHeaders` method.
 
 ```php
-use MyOperator\Transport;
+use MyOperator\Transport\Transport;
 
 $transport = new Transport('http://localhost');
 
@@ -84,13 +84,13 @@ $transport->post('/login');
 
 This library aims at making writing unit tests and mocks a breeze. This library provides a fluent [Guzzle mock](http://docs.guzzlephp.org/en/stable/testing.html) api to make mocking easy.
 
-To mock a network request, you can easily create a mock using `MyOperator\TransportMock`. Then can you queue some responses to it.
+To mock a network request, you can easily create a mock using `MyOperator\Transport\TransportMock`. Then can you queue some responses to it.
 You can then call your apis and the mock will replay the queues responses in order.
 
 For instance, to mock a `200 SUCCESS` response from any api, you can do:
 
 ```php
-use \MyOperator\TransportMock;
+use MyOperator\Transport\TransportMock;
 
 // Inititalising a mocker
 $transport = new TransportMock();

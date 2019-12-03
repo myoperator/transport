@@ -3,7 +3,7 @@
 namespace MyOperator\TransportTests\Unit;
 
 use PHPUnit\Framework\TestCase;
-use \MyOperator\Transport;
+use MyOperator\Transport\Transport;
 use GuzzleHttp\Client;
 use GuzzleHttp\Handler\MockHandler;
 use GuzzleHttp\Psr7\Response;
