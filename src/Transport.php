@@ -6,7 +6,7 @@ use GuzzleHttp\RequestOptions;
 
 class Transport {
 
-    private $defaultOpts = [
+    protected $defaultOpts = [
         'debug' => false,
         'connect_timeout' => 30,
         'headers' => [

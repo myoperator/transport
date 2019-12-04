@@ -79,6 +79,13 @@ $transport->setHeaders(['X-Auth-key' => 'xyz']);
 
 $transport->post('/login');
 ```
+## OAuth
+
+Many uses OAuth in day to day process. This library takes care of refreshing your access token. Please note that
+**this library does not generate your access token** but only refreshes it automatically, if some unauthorized status
+code is encountered.
+
+Please read more here: [Oauth.md](./oauth.md)
 
 ### Mocking network requests
 
@@ -126,4 +133,4 @@ $response = $transport->get('/status');
 ## TODO
 
 - Handling public and private APIs
-- Setting basic authentication process
+- ~~Setting basic authentication process~~
