@@ -1,6 +1,6 @@
 # MyOperator OAuth Transport
 
-This library takes care if refreshing tokens of your oauth enabled applications. You just need to provide refresh mechanism and this library retries the refresh mechanism the number of times you wish.
+This library takes care of refreshing tokens of your oauth enabled applications. You just need to provide refresh mechanism and this library retries the refresh mechanism the number of times you wish.
 
 Before getting started, first you have to know few things
 
@@ -94,7 +94,7 @@ $response = $oauth->post('some-endpoint', [
 Use this method to set your custom status code on which the token should refresh. By default, this is 401
 
 ```php
-$oauth->withStatusCodes(400); // Will retry on status code = 401
+$oauth->withStatusCodes(400); // Will retry on status code = 400
 
 $oauth->withStatusCodes(400, false); // Will retry on status code = 400, 401
 
@@ -103,5 +103,5 @@ $oauth->withStatusCodes([400, 500]); // Will retry on status code = 400, 500
 $oauth->withStatusCodes([400, 500], true); // Will retry on status code = 400, 401, 500
 ```
 
-The second param to `withStatusCodes` is to  decide wether or not you want to append your status code to
+The second param to `withStatusCodes` will decide wether or not you want to append your status code to
 the  default 401, or replace it entirely.
