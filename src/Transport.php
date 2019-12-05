@@ -6,7 +6,7 @@ use GuzzleHttp\RequestOptions;
 
 class Transport {
 
-    private $defaultOpts = [
+    protected $defaultOpts = [
         'debug' => false,
         'connect_timeout' => 30,
         'headers' => [
@@ -80,14 +80,11 @@ class Transport {
     }
 
     public function createClient($opts = []) {
-        $opts = array_merge($this->defaultOpts, $opts);
-        return new \GuzzleHttp\Client([
+        $opts = array_replace($this->defaultOpts, [
             'base_uri' => $this->baseurl,
             'headers' => $this->getHeaders(),
-            'connect_timeout' => $opts['connect_timeout'],
-            'debug' => $opts['debug'],
-            'allow_redirects' => $opts['allow_redirects']
-        ]);
+        ], $opts);
+        return new \GuzzleHttp\Client($opts);
     }
 
     public function getClient() {

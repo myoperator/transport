@@ -2,7 +2,7 @@
     "name": "myoperator/transport",
     "description": "Guzzle wrapper for making GET or POST or any network requests",
     "type": "library",
-    "license": "GPL",
+    "license": "GPL-3.0-or-later",
     "authors": [
         {
             "name": "Ashutosh Chaudhary",
@@ -22,4 +22,3 @@
         }
     }
 }
-

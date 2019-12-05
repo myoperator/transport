@@ -23,6 +23,9 @@ final class TransportTest extends TestCase
         $content_header = $transport->getHeader('Content-Type');
         $this->assertEquals('abc', $header);
         $this->assertEquals('application/x-www-form-urlencoded', $content_header);
+        $clientHeaders = $transport->getClient()->getConfig('headers');
+        $this->assertArrayHasKey('X-Custom-Header', $clientHeaders);
+        $this->assertEquals('abc', $clientHeaders['X-Custom-Header']);
     }
 
     public function test_get_response_is_returning_json()
