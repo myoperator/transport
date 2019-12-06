@@ -42,7 +42,8 @@ class OAuthHandler
      */
     public function getAuthorizationHeader($authorizationKey = 'Bearer')
     {
-        var_dump("I am called", $this->getBearerToken());
+        if(is_callable(array($this->provider, 'getBearerKey')))
+           $authorizationKey  = $this->provider->getBearerKey();
         return "{$authorizationKey} " . $this->getBearerToken();
     }
 

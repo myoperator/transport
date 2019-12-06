@@ -105,3 +105,27 @@ $oauth->withStatusCodes([400, 500], true); // Will retry on status code = 400, 4
 
 The second param to `withStatusCodes` will decide wether or not you want to append your status code to
 the  default 401, or replace it entirely.
+
+### getBearerKey
+
+Sometimes, your service provider may use a key other than `Bearer` for Authorization header. For instance, something like is still valid:
+
+```
+Authorization: example your-oauth-token
+```
+
+This method allows you to set custom Authorization bearer key for subsequent requests. In your class extending `TokenProviderInterface`, you can use this method to return  your custom bearer, else the default `Bearer` will be used.
+
+```php
+
+use MyOperator\Transport\OAuth\TokenProviderInterface;
+
+class MyTokenProvider implements TokenProviderInterface {
+
+    function getBearerKey() {
+        return 'MyCustomBearer';
+    }
+    
+    // Other methods
+}
+```
