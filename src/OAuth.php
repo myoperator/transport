@@ -5,14 +5,16 @@ namespace MyOperator\Transport;
 use GuzzleHttp\HandlerStack;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
-use MyOperator\Transport\Oauth\OAuthHandler;
-use MyOperator\Transport\Oauth\TokenProviderInterface;
-use MyOperator\Transport\Oauth\TokenCacheInterface;
+use MyOperator\Transport\OAuth\OAuthHandler;
+use MyOperator\Transport\OAuth\TokenProviderInterface;
+use MyOperator\Transport\OAuth\TokenCacheInterface;
 
 class OAuth extends Transport{
 
     private $retries = 1;
     private static $retry_status_codes = [401];
+    private $provider;
+    private $cache;
 
     public function setRetries($retry) {
         if(is_int($retry) && ($retry > 0)) {

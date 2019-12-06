@@ -1,6 +1,6 @@
 <?php
 
-namespace MyOperator\Transport\Oauth;
+namespace MyOperator\Transport\OAuth;
 
 interface TokenCacheInterface
 {
